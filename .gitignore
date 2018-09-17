@@ -1,0 +1,6 @@
+vendor
+.idea
+*.iml
+.DS_Store
+.vscode
+debug
