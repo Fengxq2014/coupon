@@ -27,7 +27,9 @@ func initRouter() *gin.Engine {
 	v1 := r.Group("/v1")
 	{
 		customer := new(controllers.CustomerController)
+		common := new(controllers.CommonController)
 		v1.GET("/customer/:phone", customer.Get)
+		v1.GET("/common/sms/:phone", common.SendSMS)
 	}
 
 	return r

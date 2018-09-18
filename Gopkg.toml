@@ -44,3 +44,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/qichengzx/qcloudsms_go"
+
+[[constraint]]
+  name = "github.com/patrickmn/go-cache"
+  version = "2.1.0"
