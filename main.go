@@ -39,9 +39,10 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	//grpc.CloseClient()
+	db.Close()
 	if err := server.Shutdown(ctx); err != nil {
 		log.Errorf("server Shutdown err:%v", err)
+	} else {
+		log.Infof("server exited")
 	}
-	log.Infof("server exited")
 }

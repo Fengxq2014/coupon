@@ -102,6 +102,14 @@
   version = "1.0.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:3f80b9f67f765d740510780b94ed91a71c739cc50e31f57aa53fcd6d95a42c98"
+  name = "github.com/qichengzx/qcloudsms_go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "643be1bf9ad616a12e598ba456a8bb371f4b9a46"
+
+[[projects]]
   digest = "1:03aa6e485e528acb119fb32901cf99582c380225fc7d5a02758e08b180cb56c3"
   name = "github.com/ugorji/go"
   packages = ["codec"]
@@ -142,6 +150,7 @@
     "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/joho/godotenv",
     "github.com/mattn/go-isatty",
+    "github.com/qichengzx/qcloudsms_go",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
