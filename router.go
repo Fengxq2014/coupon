@@ -28,8 +28,11 @@ func initRouter() *gin.Engine {
 	{
 		customer := new(controllers.CustomerController)
 		common := new(controllers.CommonController)
+		mch := new(controllers.MerchantController)
 		v1.GET("/customer/:phone", customer.Get)
-		v1.GET("/common/sms/:phone", common.SendSMS)
+		v1.GET("/common/sms/check", common.CheckSMS)
+		v1.GET("/common/sms/send/:phone", common.SendSMS)
+		v1.POST("/mch/consume", mch.Consume)
 	}
 
 	return r

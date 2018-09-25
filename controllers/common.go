@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"errors"
 	"github.com/Fengxq2014/coupon/common/cache"
+	"github.com/Fengxq2014/coupon/common/random"
 	"github.com/gin-gonic/gin"
 	"github.com/qichengzx/qcloudsms_go"
-	"math/rand"
 	"os"
 	"strconv"
 	"time"
@@ -19,7 +20,7 @@ func (ctrl CommonController) SendSMS(c *gin.Context) {
 		resultFail(c, err)
 		return
 	}
-	code := strconv.Itoa(rand.Intn(1001))
+	code := strconv.Itoa(random.RandRangeNum(1000, 9999))
 	phone := c.Param("phone")
 	var client = qcloudsms.NewClient(opt)
 	b, err := client.SendSMSSingle(qcloudsms.SMSSingleReq{
@@ -37,4 +38,17 @@ func (ctrl CommonController) SendSMS(c *gin.Context) {
 		cache.GetCache().Set(phone, code, 5*time.Minute)
 		resultOk(c, nil)
 	}
+}
+
+func (ctrl CommonController) CheckSMS(c *gin.Context) {
+	v, err := cache.GetCache().Get(c.Param("phone"))
+	if err != nil {
+		resultFail(c, err)
+		return
+	}
+	if v != c.Param("code") {
+		resultFail(c, errors.New("验证码错误"))
+		return
+	}
+	resultOk(c, nil)
 }

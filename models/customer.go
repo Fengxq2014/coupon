@@ -11,9 +11,9 @@ type Customer struct {
 
 type CustomerModel struct{}
 
-var customerTableName = "customer"
+var CustomerTableName = "customer"
 
 func (c CustomerModel) One(phone string) (customer Customer, err error) {
-	err = db.GetDB().Table(customerTableName).Where("phone = ?", phone).Take(&customer).Error
+	err = db.GetDB().Table(CustomerTableName).Where("phone = ?", phone).Take(&customer).Error
 	return
 }
