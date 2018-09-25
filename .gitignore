@@ -5,4 +5,3 @@ vendor
 .vscode
 debug
 .env
-Gopkg.lock
