@@ -14,6 +14,8 @@ import (
 type CommonController struct{}
 
 func (ctrl CommonController) SendSMS(c *gin.Context) {
+	//resultOk(c, nil)
+	//return
 	opt := qcloudsms.NewOptions(os.Getenv("SMS_APPID"), os.Getenv("SMS_APPKEY"), os.Getenv("SMS_SIGN"))
 	i, err := strconv.Atoi(os.Getenv("SMS_TPLID"))
 	if err != nil {

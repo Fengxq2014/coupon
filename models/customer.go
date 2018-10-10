@@ -7,9 +7,13 @@ import (
 type Customer struct {
 	Phone string `gorm:"primary_key"`
 	Name  string
+	Type  int
 }
 
-type CustomerModel struct{}
+type CustomerModel struct {
+	Phone string `binding:"required"`
+	Code  string `binding:"required"`
+}
 
 var CustomerTableName = "customer"
 

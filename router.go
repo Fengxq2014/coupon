@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/Fengxq2014/coupon/common/log"
 	"github.com/Fengxq2014/coupon/controllers"
 	"github.com/gin-gonic/gin"
@@ -22,18 +23,39 @@ func initRouter() *gin.Engine {
 	}
 
 	r := gin.New()
-	r.Use(loggerWithWriter(gin.DefaultWriter), gin.Recovery())
+	r.Use(loggerWithWriter(gin.DefaultWriter), gin.Recovery(), CORSMiddleware())
 
 	v1 := r.Group("/v1")
 	{
 		customer := new(controllers.CustomerController)
 		common := new(controllers.CommonController)
 		mch := new(controllers.MerchantController)
-		v1.GET("/customer/:phone", customer.Get)
+		//v1.GET("/customer/:phone", customer.Get)
 		v1.GET("/common/sms/check", common.CheckSMS)
 		v1.GET("/common/sms/send/:phone", common.SendSMS)
 		v1.POST("/mch/consume", mch.Consume)
+		v1.GET("/mch/list", mch.List)
+		v1.POST("/customer/login", customer.Login)
+		v1.GET("/customer/coplist", customer.GetCopList)
 	}
 
 	return r
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Max-Age", "86400")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding, x-access-token")
+		c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		if c.Request.Method == "OPTIONS" {
+			fmt.Println("OPTIONS")
+			c.AbortWithStatus(200)
+		} else {
+			c.Next()
+		}
+	}
 }

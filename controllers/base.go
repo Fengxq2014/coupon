@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/Fengxq2014/coupon/common/log"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,5 +26,6 @@ func resultOkData(ctx *gin.Context, data interface{}, msg string) {
 }
 
 func resultFail(ctx *gin.Context, err interface{}) {
+	log.Info(err)
 	ctx.JSON(http.StatusOK, gin.H{"code": http.StatusBadRequest, "data": nil, "msg": err})
 }
