@@ -23,7 +23,20 @@ func initRouter() *gin.Engine {
 	}
 
 	r := gin.New()
-	r.Use(loggerWithWriter(gin.DefaultWriter), gin.Recovery(), CORSMiddleware())
+	var noLogPath []string
+	noLogPath = append(noLogPath, "/front/")
+	filepath.Walk("./front", func(path string, f os.FileInfo, err error) error {
+		if f == nil {
+			return err
+		}
+		if f.IsDir() {
+			return nil
+		}
+		noLogPath = append(noLogPath, "/" + path)
+		return nil
+	})
+	r.Use(loggerWithWriter(gin.DefaultWriter, noLogPath...), gin.Recovery(), CORSMiddleware())
+	r.Static("/front", "./front")
 
 	v1 := r.Group("/v1")
 	{

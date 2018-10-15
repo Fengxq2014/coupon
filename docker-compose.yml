@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: feng
+    ports:
+     - "5432:5432"
+    volumes:
+     - ./db/:/docker-entrypoint-initdb.d/
+  webapp:
+    build: ./
+    ports:
+     - "9000:9000"
+    depends_on:
+      - "db"
+
+
+
