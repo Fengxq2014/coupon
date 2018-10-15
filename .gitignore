@@ -6,3 +6,5 @@ vendor
 debug
 .env
 front
+coupon
+coupon-upx
