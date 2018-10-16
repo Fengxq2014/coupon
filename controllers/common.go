@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/Fengxq2014/coupon/common/cache"
 	"github.com/Fengxq2014/coupon/common/random"
+	"github.com/Fengxq2014/coupon/models"
 	"github.com/gin-gonic/gin"
 	"github.com/qichengzx/qcloudsms_go"
 	"os"
@@ -22,8 +23,14 @@ func (ctrl CommonController) SendSMS(c *gin.Context) {
 		resultFail(c, err)
 		return
 	}
-	code := strconv.Itoa(random.RandRangeNum(1000, 9999))
 	phone := c.Param("phone")
+	var customer models.CustomerModel
+	_, err = customer.GetCustomer(phone)
+	if err != nil {
+		resultFail(c, "您还不是特约用户")
+		return
+	}
+	code := strconv.Itoa(random.RandRangeNum(1000, 9999))
 	var client = qcloudsms.NewClient(opt)
 	b, err := client.SendSMSSingle(qcloudsms.SMSSingleReq{
 		Tel: qcloudsms.SMSTel{

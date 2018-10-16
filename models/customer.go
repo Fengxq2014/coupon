@@ -21,3 +21,8 @@ func (c CustomerModel) One(phone string) (customer Customer, err error) {
 	err = db.GetDB().Table(CustomerTableName).Where("phone = ?", phone).Take(&customer).Error
 	return
 }
+
+func (c CustomerModel) GetCustomer(phone string) (customer Customer, err error) {
+	err = db.GetDB().Table(CustomerTableName).Where("phone = ? AND type = ?", phone, 1).Take(&customer).Error
+	return
+}

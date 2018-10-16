@@ -7,13 +7,13 @@ import (
 )
 
 type CosCop struct {
-	CopID  string
+	CopID  string `gorm:"column:copid"`
 	Phone  string
 	Status int
 }
 type CusCopModel struct {
-	CopID string
-	Phone string
+	CopID string `json:"cop_id" binding:"required"`
+	Phone string `json:"phone" binding:"required"`
 }
 
 type CouponItem struct {
@@ -45,7 +45,7 @@ func (t Time) MarshalJSON() ([]byte, error) {
 }
 
 func (c CusCopModel) Insert() error {
-	return db.GetDB().Create(&CosCop{
+	return db.GetDB().Table(CosCopTabelName).Create(&CosCop{
 		CopID:  c.CopID,
 		Phone:  c.Phone,
 		Status: 0,

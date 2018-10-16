@@ -50,6 +50,7 @@ func initRouter() *gin.Engine {
 		v1.GET("/mch/list", mch.List)
 		v1.POST("/customer/login", customer.Login)
 		v1.GET("/customer/coplist", customer.GetCopList)
+		v1.POST("/customer/getcop", customer.GetCop)
 	}
 
 	return r
