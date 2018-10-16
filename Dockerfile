@@ -6,4 +6,4 @@ WORKDIR coupon
 RUN dep ensure
 ADD .env .env
 EXPOSE 9000
-RUN go run *.go
+ENTRYPOINT ["go","run","/go/src/github.com/Fengxq2014/coupon/main.go","/go/src/github.com/Fengxq2014/coupon/router.go","/go/src/github.com/Fengxq2014/coupon/logMiddleware.go"]
