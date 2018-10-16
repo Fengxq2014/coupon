@@ -24,7 +24,6 @@ func (ctrl MerchantController) Consume(c *gin.Context) {
 	copModel := models.CusCopModel{}
 	cc, err := copModel.Get(model.CopID)
 	if err != nil {
-		log.Errorf("cuscop查询错误：%s", err)
 		resultFail(c, "券码错误")
 		return
 	}
@@ -32,8 +31,13 @@ func (ctrl MerchantController) Consume(c *gin.Context) {
 		resultFail(c, "优惠券状态不能核销")
 		return
 	}
-
-	err = model.Consume(20, cc.Phone)
+	couponM := models.CouponModel{}
+	coupon, err := couponM.GetByCusCopID(model.CopID)
+	if err != nil {
+		resultFail(c, "非法优惠券")
+		return
+	}
+	err = model.Consume(coupon.Amount, cc.Phone)
 	if err != nil {
 		resultFail(c, err)
 	} else {

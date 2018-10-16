@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/Fengxq2014/coupon/common/cache"
+	"github.com/Fengxq2014/coupon/common/random"
 	"github.com/Fengxq2014/coupon/models"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/go-playground/validator.v8"
@@ -89,7 +90,9 @@ func (ctrl CustomerController) GetCop(c *gin.Context) {
 		return
 	}
 	copModel := models.CusCopModel{}
-	_, err = copModel.Get(model.CopID)
+	copModel.CopID = model.CopID
+	copModel.Phone = model.Phone
+	_, err = copModel.GetByIDAndPhone()
 	if err == nil {
 		resultFail(c, "您已经领取该优惠券")
 		return
@@ -97,10 +100,19 @@ func (ctrl CustomerController) GetCop(c *gin.Context) {
 	var insert models.CusCopModel
 	insert.CopID = model.CopID
 	insert.Phone = model.Phone
-	err = insert.Insert()
+	err = insert.Insert(getCouPonID())
 	if err != nil {
 		resultFail(c, "领取失败")
 		return
 	}
 	resultOk(c, nil)
+}
+
+func getCouPonID() int {
+	var mode models.CusCopModel
+	rangeNum := random.RandRangeNum(100000, 999999)
+	for !mode.IsNotUseID(rangeNum) {
+		rangeNum = random.RandRangeNum(100000, 999999)
+	}
+	return rangeNum
 }

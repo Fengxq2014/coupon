@@ -48,7 +48,7 @@ func (con ConsumeModel) Consume(amount int, custPhone string) error {
 		tx.Rollback()
 		return err
 	}
-	if err := tx.Table(CosCopTabelName).Where("copid = ?", con.CopID).Update("status", "1").Error; err != nil {
+	if err := tx.Table(CosCopTabelName).Where("id = ?", con.CopID).Update("status", "1").Error; err != nil {
 		tx.Rollback()
 		return err
 	}

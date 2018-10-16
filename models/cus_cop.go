@@ -10,6 +10,7 @@ type CosCop struct {
 	CopID  string `gorm:"column:copid"`
 	Phone  string
 	Status int
+	ID     int `gorm:"column:id"`
 }
 type CusCopModel struct {
 	CopID string `json:"cop_id" binding:"required"`
@@ -44,23 +45,37 @@ func (t Time) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.FormatInt(time.Time(t).Unix(), 10)), nil
 }
 
-func (c CusCopModel) Insert() error {
+func (c CusCopModel) Insert(id int) error {
 	return db.GetDB().Table(CosCopTabelName).Create(&CosCop{
 		CopID:  c.CopID,
 		Phone:  c.Phone,
 		Status: 0,
+		ID:     id,
 	}).Error
 }
 
 func (c CusCopModel) Get(id string) (cc CosCop, err error) {
-	err = db.GetDB().Table(CosCopTabelName).Where("copid = ?", id).Take(&cc).Error
+	err = db.GetDB().Table(CosCopTabelName).Where("id = ?", id).Take(&cc).Error
 	return
 }
 
 func (c CusCopModel) GetList() (ccs []CouponItem, err error) {
-	err = db.GetDB().Table(CosCopTabelName).Select("code, title, amount, start_time, exp_time").Joins("left join coupon on copid = coupon.id").Where("phone=?", c.Phone).Scan(&ccs).Error
+	err = db.GetDB().Table(CosCopTabelName).Select("cus_cop.id as code, title, amount, start_time, exp_time").Joins("left join coupon on copid = coupon.id").Where("phone=?", c.Phone).Scan(&ccs).Error
 	for k := range ccs {
 		ccs[k].Value = ccs[k].Denominations
 	}
 	return
+}
+
+func (c CusCopModel) GetByIDAndPhone() (cc CosCop, err error) {
+	err = db.GetDB().Table(CosCopTabelName).Where("copid = ? AND phone = ?", c.CopID, c.Phone).Take(&cc).Error
+	return
+}
+
+func (c CusCopModel) IsNotUseID(id int) bool {
+	return db.GetDB().Table(CosCopTabelName).Where("id = ? AND status = 0", id).RecordNotFound()
+}
+
+func (c CusCopModel) HasCouponCode(code int) bool {
+	return !db.GetDB().Table(CosCopTabelName).Select("count(1)").Joins("left join coupon on copid = coupon.id").Where("cus_cop.id=?", code).RecordNotFound()
 }

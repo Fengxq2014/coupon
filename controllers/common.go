@@ -38,13 +38,13 @@ func (ctrl CommonController) SendSMS(c *gin.Context) {
 			Mobile:     phone,
 		},
 		TplID:  i,
-		Params: []string{code, "5分钟"},
+		Params: []string{code, "15分钟"},
 		Sig:    os.Getenv("sign"),
 	})
 	if !b {
-		resultFail(c, err)
+		resultFail(c, err.Error())
 	} else {
-		cache.GetCache().Set(phone, code, 5*time.Minute)
+		cache.GetCache().Set(phone, code, 15*time.Minute)
 		resultOk(c, nil)
 	}
 }
