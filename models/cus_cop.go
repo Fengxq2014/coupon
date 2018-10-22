@@ -67,13 +67,15 @@ func (c CusCopModel) GetList() (ccs []CouponItem, err error) {
 	return
 }
 
-func (c CusCopModel) GetByIDAndPhone() (cc CosCop, err error) {
-	err = db.GetDB().Table(CosCopTabelName).Where("copid = ? AND phone = ?", c.CopID, c.Phone).Take(&cc).Error
+func (c CusCopModel) GetByIDAndPhone(status int) (cc CosCop, err error) {
+	err = db.GetDB().Table(CosCopTabelName).Where("copid = ? AND phone = ? AND status = ?", c.CopID, c.Phone, status).Take(&cc).Error
 	return
 }
 
 func (c CusCopModel) IsNotUseID(id int) bool {
-	return db.GetDB().Table(CosCopTabelName).Where("id = ? AND status = 0", id).RecordNotFound()
+	var count int
+	db.GetDB().Table(CosCopTabelName).Where("id = ? AND status = 0", id).Count(&count)
+	return count <= 0
 }
 
 func (c CusCopModel) HasCouponCode(code int) bool {

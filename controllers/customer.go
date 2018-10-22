@@ -92,7 +92,7 @@ func (ctrl CustomerController) GetCop(c *gin.Context) {
 	copModel := models.CusCopModel{}
 	copModel.CopID = model.CopID
 	copModel.Phone = model.Phone
-	_, err = copModel.GetByIDAndPhone()
+	_, err = copModel.GetByIDAndPhone(0)
 	if err == nil {
 		resultFail(c, "您已经领取该优惠券")
 		return

@@ -20,7 +20,7 @@ func (ctrl CommonController) SendSMS(c *gin.Context) {
 	opt := qcloudsms.NewOptions(os.Getenv("SMS_APPID"), os.Getenv("SMS_APPKEY"), os.Getenv("SMS_SIGN"))
 	i, err := strconv.Atoi(os.Getenv("SMS_TPLID"))
 	if err != nil {
-		resultFail(c, err)
+		resultFail(c, err.Error())
 		return
 	}
 	phone := c.Param("phone")
@@ -28,6 +28,10 @@ func (ctrl CommonController) SendSMS(c *gin.Context) {
 	_, err = customer.GetCustomer(phone)
 	if err != nil {
 		resultFail(c, "您还不是特约用户")
+		return
+	}
+	if _, err = cache.GetCache().Get(phone); err == nil {
+		resultFail(c, "您已经发送过验证码，请勿频繁发送")
 		return
 	}
 	code := strconv.Itoa(random.RandRangeNum(1000, 9999))
